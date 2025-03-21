@@ -24,7 +24,7 @@ Schedule Project는 ..
 | 전체 일정 조회   | GET    | /schedule/v1/schedules              | 요청 param       | 다건 응답 정보 | 200: 정상조회 |
 | 선택 일정 조회   | GET    | /schedule/v1/schedule/{schedulesId} | 요청 param      | 단건 응답 정보 | 200: 정상조회 |
 | 선택 일정 업데이트 | PUT    | /schedule/v1/schedule/{schedulesId} | 요청 body      | -        | 200: 정상수정 |
-| 선택 일정 삭제   | DELETE | /schedule/v1/schedule/{schedulesId} | 요청 param      | -        | 200: 정상삭제 |
+| 선택 일정 삭제   | DELETE | /schedule/v1/schedule | 요청 body      | -        | 200: 정상삭제 |
 
 ## DB 구조
 ![img.png](img.png)
