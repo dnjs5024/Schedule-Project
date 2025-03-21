@@ -28,27 +28,21 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
 
     @Override
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto scheduleRequest) {
-        //현재 시간
-        String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
 
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         simpleJdbcInsert.withTableName("schedule");
         simpleJdbcInsert.usingGeneratedKeyColumns("schedule_id");
         Map<String, Object> insertDataMap = new HashMap<>();
         insertDataMap.put("userName", scheduleRequest.getUserName());
-        insertDataMap.put("createdAt", localDateTime);
-        insertDataMap.put("updatedAt", localDateTime);
+        insertDataMap.put("createdAt", getCurrentTime());
+        insertDataMap.put("updatedAt", getCurrentTime());
         insertDataMap.put("content", scheduleRequest.getContent());
         insertDataMap.put("userPwd", scheduleRequest.getUserPwd());
 
         Number key = simpleJdbcInsert.executeAndReturnKey(new MapSqlParameterSource(insertDataMap));
-        return new ScheduleResponseDto(key.intValue(), scheduleRequest.getUserName(), localDateTime, scheduleRequest.getContent());
+        return new ScheduleResponseDto(key.intValue(), scheduleRequest.getUserName(), getCurrentTime(), scheduleRequest.getContent());
     }
 
-    @Override
-    public List<ScheduleResponseDto> findSchedules() {
-        return jdbcTemplate.query("Select * from schedule", custonRowMapper());
-    }
 
     @Override
     public ScheduleResponseDto findSelectScheduleById(int scheduleId) {
@@ -61,14 +55,24 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
+    public List<ScheduleResponseDto> findSchedules(String userName, String updatedAt) {
+        return jdbcTemplate.query("Select * from schedule where user_name like ? and updated_at like ? order by updated_at desc",custonRowMapper(),userName ,updatedAt);
+    }
+
+    @Override
     public ScheduleResponseDto updateScheduleById(int scheduleId, ScheduleRequestDto scheduleRequest) {
-        jdbcTemplate.update("update schedule set content = ?,user_name = ?  where schedule_id = ?  ", scheduleRequest.getContent(),scheduleRequest.getUserName(),scheduleId);
+        jdbcTemplate.update("update schedule set content = ?,user_name = ? ,updated_at = ? where schedule_id = ?  ", scheduleRequest.getContent(), scheduleRequest.getUserName(), getCurrentTime(), scheduleId);
         return null;
     }
 
     @Override
     public String findUserPwdById(int scheduleId) {
         return jdbcTemplate.query("Select user_pwd from schedule where schedule_id = ?", (rs, i) -> new String(rs.getString("user_pwd")), scheduleId).get(0);
+    }
+
+    @Override
+    public String getCurrentTime() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public RowMapper<ScheduleResponseDto> custonRowMapper() {
