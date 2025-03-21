@@ -27,7 +27,7 @@ public class ScheduleController {
         return scheduleService.findSelectScheduleById(schedulesId);
     }
 
-    @PostMapping("/v1/schedules")
+    @PostMapping("/v1/schedule")
     public ScheduleResponseDto saveScheduleController(@RequestBody ScheduleRequestDto scheduleRequest) {
         return scheduleService.saveSchedule(scheduleRequest);
     }
@@ -37,9 +37,9 @@ public class ScheduleController {
         scheduleService.deleteScheduleById(schedulesId, userPwd);
     }
 
-    @PatchMapping("v1/schedule/{schedulesId}")
-    public ScheduleResponseDto updateScheduleByIdController(@RequestBody ScheduleRequestDto scheduleRequest) {
-        return scheduleService.updateScheduleById(scheduleRequest);
+    @PatchMapping("/v1/schedule/{schedulesId}")
+    public ScheduleResponseDto updateScheduleByIdController(@RequestBody ScheduleRequestDto scheduleRequest, @PathVariable int schedulesId) {
+        return scheduleService.updateScheduleById(schedulesId, scheduleRequest);
     }
 
 }

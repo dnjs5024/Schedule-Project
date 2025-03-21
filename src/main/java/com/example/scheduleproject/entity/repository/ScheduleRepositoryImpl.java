@@ -61,8 +61,8 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public ScheduleResponseDto updateScheduleById(ScheduleRequestDto scheduleRequest) {
-        jdbcTemplate.update("update set content = ?,user_name = ? from schedule where schedule_id = ?  ", scheduleRequest.getContent(),scheduleRequest.getUserName(),scheduleRequest.getSchedileId());
+    public ScheduleResponseDto updateScheduleById(int scheduleId, ScheduleRequestDto scheduleRequest) {
+        jdbcTemplate.update("update schedule set content = ?,user_name = ?  where schedule_id = ?  ", scheduleRequest.getContent(),scheduleRequest.getUserName(),scheduleId);
         return null;
     }
 

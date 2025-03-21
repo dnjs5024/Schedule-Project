@@ -10,7 +10,7 @@ public interface ScheduleRepository {
     public List<ScheduleResponseDto> findSchedules();
     public ScheduleResponseDto findSelectScheduleById(int scheduleId);
     public void deleteScheduleById(int scheduleId);
-    public ScheduleResponseDto updateScheduleById(ScheduleRequestDto scheduleRequest);
+    public ScheduleResponseDto updateScheduleById(int scheduleId,ScheduleRequestDto scheduleRequest);
 
     public String findUserPwdById(int scheduleId);// 비밀번호 db에서 가져옴
 }

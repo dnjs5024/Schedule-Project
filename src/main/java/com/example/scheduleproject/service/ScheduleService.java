@@ -10,6 +10,6 @@ public interface ScheduleService {
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto scheduleRequest);
     public List<ScheduleResponseDto> findSchedules( );
     public ScheduleResponseDto findSelectScheduleById(int scheduleId);
-    public ScheduleResponseDto updateScheduleById(ScheduleRequestDto scheduleRequest);
+    public ScheduleResponseDto updateScheduleById(int scheduleId,ScheduleRequestDto scheduleRequest);
     public String findUserPwdById(int scheduleId,String userPwd);// 비밀번호 db에서 가져옴
 }

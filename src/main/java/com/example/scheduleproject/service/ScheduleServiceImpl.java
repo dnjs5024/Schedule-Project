@@ -40,8 +40,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleResponseDto updateScheduleById(ScheduleRequestDto scheduleRequest) {
-        return scheduleRepository.updateScheduleById(scheduleRequest);
+    public ScheduleResponseDto updateScheduleById(int scheduleId, ScheduleRequestDto scheduleRequest) {
+        return scheduleRepository.updateScheduleById(scheduleId, scheduleRequest);
     }
 
     @Override
