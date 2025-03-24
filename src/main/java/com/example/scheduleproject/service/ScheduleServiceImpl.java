@@ -1,5 +1,6 @@
 package com.example.scheduleproject.service;
 
+import com.example.scheduleproject.exception.CustomException;
 import com.example.scheduleproject.dto.ScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.entity.repository.ScheduleRepository;
@@ -19,9 +20,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public void deleteScheduleById(int schedule, String userPwd) {
-        if (findUserPwdById(schedule, userPwd).equals("userPwd"))
-            scheduleRepository.deleteScheduleById(schedule);  //비밀번호 맞는지 검사
+    public void deleteScheduleById(int scheduleId, String userPwd) {
+        checkInsertPwd(scheduleId,userPwd);
+        scheduleRepository.deleteScheduleById(scheduleId);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (!userId.trim().isEmpty()) {//userId가 있으면 실행
             return scheduleRepository.findSchedulesByUserId("%" + userId + "%");
         }
-        return scheduleRepository.findSchedulesByUserName("%" + userName + "%" ,"%" + updatedAt + "%"); //userId가 없으면 userName or updatedAt로 검색 하는 것이므로 실행
+        return scheduleRepository.findSchedulesByUserName("%" + userName + "%", "%" + updatedAt + "%"); //userId가 없으면 userName or updatedAt로 검색 하는 것이므로 실행
     }
 
     @Override
@@ -44,16 +45,24 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ScheduleResponseDto updateScheduleById(int scheduleId, ScheduleRequestDto scheduleRequest) {
+        checkInsertPwd(scheduleId,scheduleRequest.getUserPwd());
         return scheduleRepository.updateScheduleById(scheduleId, scheduleRequest);
     }
 
     @Override
-    public String findUserPwdById(int scheduleId, String userPwd) {
+    public String findUserPwdById(int scheduleId) {//선택한 일정의 비밀번호를 가져옴
         return scheduleRepository.findUserPwdById(scheduleId);
     }
 
     @Override
     public List<ScheduleResponseDto> findSchedulesByCurrentPageNum(int currentNum, int pageSize) {
-        return  scheduleRepository.findSchedulesByCurrentPageNum(currentNum * pageSize, currentNum + pageSize);
+        return scheduleRepository.findSchedulesByCurrentPageNum(currentNum * pageSize, currentNum + pageSize);
+    }
+
+    @Override
+    public void checkInsertPwd(int scheduleId, String userPwd) {
+        if (!(findUserPwdById(scheduleId).equals("userPwd"))) {//비밀번호 맞는지 검사
+            throw new CustomException("올바른 비밀번호 입력");
+        }
     }
 }

@@ -40,7 +40,7 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/v1/schedule")
-    public void deleteScheduleByIdController(@RequestParam int schedulesId, String userPwd) {
+    public void deleteScheduleByIdController(@RequestParam int schedulesId, @RequestParam String userPwd) {
         scheduleService.deleteScheduleById(schedulesId, userPwd);
     }
 

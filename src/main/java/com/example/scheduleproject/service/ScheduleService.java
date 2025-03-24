@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ScheduleService {
 
-    public void deleteScheduleById(int scheduleId, String userPwd);
+    public void deleteScheduleById(int scheduleId, String userPwd);//일정 삭제
 
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto scheduleRequest);
 
@@ -17,8 +17,9 @@ public interface ScheduleService {
 
     public ScheduleResponseDto updateScheduleById(int scheduleId, ScheduleRequestDto scheduleRequest);
 
-    public String findUserPwdById(int scheduleId, String userPwd);// 비밀번호 db에서 가져옴
+    public String findUserPwdById(int scheduleId);// 비밀번호 db에서 가져옴
 
     public List<ScheduleResponseDto> findSchedulesByCurrentPageNum(int currentNum,int pageSize);
 
+    public void checkInsertPwd(int scheduleId, String userPwd);
 }
