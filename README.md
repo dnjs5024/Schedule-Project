@@ -29,7 +29,13 @@ Schedule Project는 ..
 
 ## DB 구조
 
+LV 0,1,2
+
 ![img.png](img.png)
+
+LV 도전과제
+
+![img_1.png](img_1.png)
 
 ```
 굳

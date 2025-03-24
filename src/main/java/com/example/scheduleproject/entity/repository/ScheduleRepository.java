@@ -9,7 +9,9 @@ public interface ScheduleRepository {
 
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto scheduleRequest);
 
-    public List<ScheduleResponseDto> findSchedules(String userName, String updatedAt);
+    public List<ScheduleResponseDto> findSchedulesByUserId(String userId);
+
+    public List<ScheduleResponseDto> findSchedulesByUserName(String userName, String updatedAt);
 
     public ScheduleResponseDto findSelectScheduleById(int scheduleId);
 

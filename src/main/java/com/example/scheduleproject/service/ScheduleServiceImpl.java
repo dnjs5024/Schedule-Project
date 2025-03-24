@@ -20,7 +20,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public void deleteScheduleById(int schedule, String userPwd) {
-        if(findUserPwdById(schedule, userPwd).equals("userPwd")) scheduleRepository.deleteScheduleById(schedule);  //비밀번호 맞는지 검사
+        if (findUserPwdById(schedule, userPwd).equals("userPwd"))
+            scheduleRepository.deleteScheduleById(schedule);  //비밀번호 맞는지 검사
     }
 
     @Override
@@ -29,8 +30,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedules(String userName, String updatedAt) {
-        return scheduleRepository.findSchedules("%"+userName,"%"+updatedAt+"%");
+    public List<ScheduleResponseDto> findSchedules(String userName, String updatedAt, String userId) {
+        if (!userId.trim().isEmpty()) {//userId가 있으면 실행
+            return scheduleRepository.findSchedulesByUserId("%" + userId + "%");
+        }
+        return scheduleRepository.findSchedulesByUserName("%" + userName + "%" ,"%" + updatedAt + "%"); //userId가 없으면 userName or updatedAt로 검색 하는 것이므로 실행
     }
 
     @Override

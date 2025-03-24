@@ -33,20 +33,20 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
         simpleJdbcInsert.withTableName("schedule");
         simpleJdbcInsert.usingGeneratedKeyColumns("schedule_id");
         Map<String, Object> insertDataMap = new HashMap<>();
-        insertDataMap.put("userName", scheduleRequest.getUserName());
+        insertDataMap.put("user_id", scheduleRequest.getUserName());
         insertDataMap.put("createdAt", getCurrentTime());
         insertDataMap.put("updatedAt", getCurrentTime());
         insertDataMap.put("content", scheduleRequest.getContent());
         insertDataMap.put("userPwd", scheduleRequest.getUserPwd());
 
         Number key = simpleJdbcInsert.executeAndReturnKey(new MapSqlParameterSource(insertDataMap));
-        return new ScheduleResponseDto(key.intValue(), scheduleRequest.getUserName(), getCurrentTime(), scheduleRequest.getContent());
+        return new ScheduleResponseDto(key.intValue(), scheduleRequest.getUserId(), scheduleRequest.getUserName(), getCurrentTime(), scheduleRequest.getContent());
     }
 
 
     @Override
     public ScheduleResponseDto findSelectScheduleById(int scheduleId) {
-        return jdbcTemplate.query("Select * from schedule where schedule_id = ?", (rs, i) -> new ScheduleResponseDto(rs.getInt("schedule_id"), rs.getString("user_name"), rs.getString("updated_at"), rs.getString("content")), scheduleId).get(0);
+        return jdbcTemplate.query("Select * from schedule where schedule_id = ?", (rs, i) -> new ScheduleResponseDto(rs.getInt("schedule_id"), rs.getInt("user_id"), rs.getString("user_name"), rs.getString("updated_at"), rs.getString("content")), scheduleId).get(0);
     }
 
     @Override
@@ -55,8 +55,21 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedules(String userName, String updatedAt) {
-        return jdbcTemplate.query("Select * from schedule where user_name like ? and updated_at like ? order by updated_at desc",custonRowMapper(),userName ,updatedAt);
+    public List<ScheduleResponseDto> findSchedulesByUserId(String userId) {
+        return jdbcTemplate.query("select * from " +
+                "(Select * from schedule a  where user_id like ? ) a " +
+                "join " + "(select user_name,user_id from users) b " +
+                "on a.user_id = b.user_id order by updated_at desc;",
+                custonRowMapper(),userId);
+    }
+
+    @Override
+    public List<ScheduleResponseDto> findSchedulesByUserName(String userName, String updatedAt) {
+        return jdbcTemplate.query("select * from " +
+                        "(Select * from schedule a  where updated_at like ?) a " +
+                        "join " + "(select user_name,user_id from users where user_name like ?) b " +
+                        "on a.user_id = b.user_id order by updated_at desc;",
+                custonRowMapper(),updatedAt,userName);
     }
 
     @Override
@@ -79,7 +92,7 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
         return new RowMapper<ScheduleResponseDto>() {
             @Override
             public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new ScheduleResponseDto(rs.getInt("schedule_id"), rs.getString("user_name"), rs.getString("updated_at"), rs.getString("content"));
+                return new ScheduleResponseDto(rs.getInt("schedule_id"), rs.getInt("a.user_id"), rs.getString("user_name"), rs.getString("updated_at"), rs.getString("content"));
             }
         };
     }

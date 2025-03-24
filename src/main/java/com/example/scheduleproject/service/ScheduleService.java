@@ -11,7 +11,7 @@ public interface ScheduleService {
 
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto scheduleRequest);
 
-    public List<ScheduleResponseDto> findSchedules(String userName,String updatedAt);
+    public List<ScheduleResponseDto> findSchedules(String userName, String updatedAt, String userId);
 
     public ScheduleResponseDto findSelectScheduleById(int scheduleId);
 

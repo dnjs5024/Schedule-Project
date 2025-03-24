@@ -20,9 +20,10 @@ public class ScheduleController {
     @GetMapping("/v1/schedules")
     public List<ScheduleResponseDto> findSchedulesController(
             @RequestParam(required = false, defaultValue = "") String userName,
-            @RequestParam(required = false, defaultValue = "") String updatedAt
+            @RequestParam(required = false, defaultValue = "") String updatedAt,
+            @RequestParam(required = false, defaultValue = "") String userId
     ) {
-        return scheduleService.findSchedules(userName, updatedAt);
+        return scheduleService.findSchedules(userName, updatedAt, userId);
     }
 
     @GetMapping("/v1/schedule/{schedulesId}")
