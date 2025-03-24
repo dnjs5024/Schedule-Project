@@ -88,6 +88,17 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
+    @Override
+    public List<ScheduleResponseDto> findSchedulesByCurrentPageNum(int startNum, int endNum) {
+        return jdbcTemplate.query("select *\n" +
+                        "from (Select * from schedule a) a\n" +
+                        "join (select user_name, user_id from users) b\n" +
+                        "on a.user_id = b.user_id\n" +
+                        "order by updated_at desc\n" +
+                        "limit ?,?",
+                custonRowMapper(), startNum, endNum);
+    }
+
     public RowMapper<ScheduleResponseDto> custonRowMapper() {
         return new RowMapper<ScheduleResponseDto>() {
             @Override

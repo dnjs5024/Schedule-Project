@@ -51,4 +51,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     public String findUserPwdById(int scheduleId, String userPwd) {
         return scheduleRepository.findUserPwdById(scheduleId);
     }
+
+    @Override
+    public List<ScheduleResponseDto> findSchedulesByCurrentPageNum(int currentNum, int pageSize) {
+        return  scheduleRepository.findSchedulesByCurrentPageNum(currentNum * pageSize, currentNum + pageSize);
+    }
 }

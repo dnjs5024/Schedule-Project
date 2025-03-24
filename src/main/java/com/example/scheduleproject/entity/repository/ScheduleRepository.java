@@ -23,4 +23,6 @@ public interface ScheduleRepository {
 
     public String getCurrentTime();//현재 시간 가져옴
 
+    public List<ScheduleResponseDto> findSchedulesByCurrentPageNum(int startNum,int endNum);
+
 }

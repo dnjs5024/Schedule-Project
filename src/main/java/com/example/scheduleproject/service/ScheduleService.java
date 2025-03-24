@@ -19,4 +19,6 @@ public interface ScheduleService {
 
     public String findUserPwdById(int scheduleId, String userPwd);// 비밀번호 db에서 가져옴
 
+    public List<ScheduleResponseDto> findSchedulesByCurrentPageNum(int currentNum,int pageSize);
+
 }
