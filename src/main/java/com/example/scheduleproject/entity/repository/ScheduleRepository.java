@@ -19,7 +19,9 @@ public interface ScheduleRepository {
 
     public void deleteScheduleById(int scheduleId);
 
-    public ScheduleResponseDto updateScheduleById(int scheduleId, ScheduleRequestDto scheduleRequest);
+    public ScheduleResponseDto updateScheduleByIdForUserName(int scheduleId, ScheduleRequestDto scheduleRequest);//아이디가져와서 유저 닉네임 업데이트
+
+    public ScheduleResponseDto updateScheduleByIdForContent(int scheduleId, ScheduleRequestDto scheduleRequest);//아이디가져와서 일정 내용 업데이트
 
     public String findUserPwdById(int scheduleId);// 비밀번호 db에서 가져옴
 

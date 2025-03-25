@@ -64,12 +64,12 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public void deleteScheduleById(int scheduleId) {
+    public void deleteScheduleById(int scheduleId) {//선택한 일정 삭제하는 메소드
         jdbcTemplate.update("delete from schedule where schedule_id = ? ", scheduleId);
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesByUserId(String userId) {
+    public List<ScheduleResponseDto> findSchedulesByUserId(String userId) {//선택한 유저ID로 유저가 작성한 글 목록 가져옴
         return jdbcTemplate.query(
                 "select * from " +
                         "(Select * from schedule a  where user_id like ? ) a " +
@@ -79,7 +79,7 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesByUserName(String userName, String updatedAt) {
+    public List<ScheduleResponseDto> findSchedulesByUserName(String userName, String updatedAt) {//유저 닉네임과 날짜로 조회에서 리스트 가져오는 메소드
         return jdbcTemplate.query(
                 "select * from " +
                         "(Select * from schedule a  where updated_at like ?) a " +
@@ -89,11 +89,23 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public ScheduleResponseDto updateScheduleById(int scheduleId, ScheduleRequestDto scheduleRequest) {
+    public ScheduleResponseDto updateScheduleByIdForUserName(int scheduleId, ScheduleRequestDto scheduleRequest) {//일정ID로  작성자명 수정하는 메소드
         jdbcTemplate.update(
-                "update schedule set content = ?,user_name = ? ,updated_at = ? where schedule_id = ?  ",
-                scheduleRequest.getContent(), scheduleRequest.getUserName(), getCurrentTime(), scheduleId);
-        return null;
+                "update users\n" +
+                        "set user_name = 'updateName'\n" +
+                        "where user_id = (select user_id\n" +
+                        "from schedule\n" +
+                        "where schedule_id = ?);",
+                scheduleId);
+        return findSelectScheduleById(scheduleId);// 수정 결과 db에 조회에서 보여줌
+    }
+
+    @Override
+    public ScheduleResponseDto updateScheduleByIdForContent(int scheduleId, ScheduleRequestDto scheduleRequest) {//일정ID로 할 일 내용 수정하는 메소드
+        jdbcTemplate.update(
+                "update schedule set content = ?,updated_at = ? where schedule_id = ?  ",
+                scheduleRequest.getContent(), getCurrentTime(), scheduleId);
+        return findSelectScheduleById(scheduleId);//
     }
 
     @Override
@@ -103,7 +115,7 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public String getCurrentTime() {
+    public String getCurrentTime() {//현재 시간 계산해서 가져옴
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 

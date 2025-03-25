@@ -1,8 +1,10 @@
 package com.example.scheduleproject.exception;
 
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,5 +24,10 @@ public class MyExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class) //Controller의 @Valid에 걸렸을 때 오류 클라이언트로 보내주는 메소드
     public ResponseEntity<String> methodArgumentNotValidExceptionHandle(MethodArgumentNotValidException me){
         return new ResponseEntity<>(me.getBindingResult().getFieldErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class) //@Validated 걸렸을 때 오류 클라이언트로 보내주는 메소드
+    public ResponseEntity<String> constraintViolationExceptionHandle(ConstraintViolationException me){
+        return new ResponseEntity<>(me.getConstraintViolations().iterator().next().getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

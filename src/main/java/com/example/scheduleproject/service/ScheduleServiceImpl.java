@@ -47,8 +47,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ScheduleResponseDto updateScheduleById(int scheduleId, ScheduleRequestDto scheduleRequest) {
-        checkInsertPwd(scheduleId,scheduleRequest.getUserPwd());
-        return scheduleRepository.updateScheduleById(scheduleId, scheduleRequest);
+        checkInsertPwd(scheduleId,scheduleRequest.getUserPwd());//비밀번호가 일치하면 업데이트
+
+        return scheduleRepository.updateScheduleByIdForUserName(scheduleId, scheduleRequest);
     }
 
     @Override
