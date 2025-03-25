@@ -2,6 +2,8 @@ package com.example.scheduleproject.entity.repository;
 
 import com.example.scheduleproject.dto.ScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
+import com.example.scheduleproject.dto.UsersRequestDto;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -24,5 +26,7 @@ public interface ScheduleRepository {
     public String getCurrentTime();//현재 시간 가져옴
 
     public List<ScheduleResponseDto> findSchedulesByCurrentPageNum(int startNum,int endNum);
+
+    public ResponseEntity<UsersRequestDto> userSignUp(UsersRequestDto usersRequestDto);//유저 정보 users 테이블에 저장
 
 }

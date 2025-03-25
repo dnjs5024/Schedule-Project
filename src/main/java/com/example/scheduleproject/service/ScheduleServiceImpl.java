@@ -1,10 +1,12 @@
 package com.example.scheduleproject.service;
 
+import com.example.scheduleproject.dto.UsersRequestDto;
 import com.example.scheduleproject.exception.CustomException;
 import com.example.scheduleproject.dto.ScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.entity.repository.ScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,5 +66,10 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (!(findUserPwdById(scheduleId).equals("userPwd"))) {//비밀번호 맞는지 검사
             throw new CustomException("올바른 비밀번호 입력");
         }
+    }
+
+    @Override
+    public ResponseEntity<UsersRequestDto> userSignUp(UsersRequestDto usersRequestDto) {
+        return scheduleRepository.userSignUp(usersRequestDto);
     }
 }

@@ -2,8 +2,10 @@ package com.example.scheduleproject.controller;
 
 import com.example.scheduleproject.dto.ScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
+import com.example.scheduleproject.dto.UsersRequestDto;
 import com.example.scheduleproject.service.ScheduleService;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +37,7 @@ public class ScheduleController {
     }
 
     @PostMapping("/v1/schedule")
-    public ScheduleResponseDto saveScheduleController(@RequestBody ScheduleRequestDto scheduleRequest) {
+    public ScheduleResponseDto saveScheduleController(@RequestBody @Valid ScheduleRequestDto scheduleRequest) {
         return scheduleService.saveSchedule(scheduleRequest);
     }
 
@@ -54,4 +56,8 @@ public class ScheduleController {
         return scheduleService.findSchedulesByCurrentPageNum(currentNum, pageSize);
     }
 
+    @PostMapping("/v1/users")//유저 정보 users 테이블에 저장
+    public ResponseEntity<UsersRequestDto> userSignUpController(UsersRequestDto usersRequestDto){
+        return scheduleService.userSignUp(usersRequestDto);
+    }
 }

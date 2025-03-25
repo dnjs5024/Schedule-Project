@@ -2,6 +2,8 @@ package com.example.scheduleproject.service;
 
 import com.example.scheduleproject.dto.ScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
+import com.example.scheduleproject.dto.UsersRequestDto;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -22,4 +24,6 @@ public interface ScheduleService {
     public List<ScheduleResponseDto> findSchedulesByCurrentPageNum(int currentNum,int pageSize);
 
     public void checkInsertPwd(int scheduleId, String userPwd);
+
+    public ResponseEntity<UsersRequestDto> userSignUp(UsersRequestDto usersRequestDto);//유저 정보 users 테이블에 저장
 }
