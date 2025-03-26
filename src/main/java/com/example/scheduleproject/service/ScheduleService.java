@@ -2,8 +2,7 @@ package com.example.scheduleproject.service;
 
 import com.example.scheduleproject.dto.ScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
-import com.example.scheduleproject.dto.UsersRequestDto;
-import org.springframework.http.ResponseEntity;
+import com.example.scheduleproject.entity.Schedule;
 
 import java.util.List;
 
@@ -25,5 +24,6 @@ public interface ScheduleService {
 
     public void checkInsertPwd(int scheduleId, String userPwd);
 
-    public ResponseEntity<UsersRequestDto> userSignUp(UsersRequestDto usersRequestDto);//유저 정보 users 테이블에 저장
+    public Schedule initScheduleByScheduleRequestDto(ScheduleRequestDto scheduleRequestDto);//Schedule 데이터 넣어줌
+
 }
