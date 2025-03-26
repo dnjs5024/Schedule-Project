@@ -8,6 +8,7 @@ import com.example.scheduleproject.entity.repository.ScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +23,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 일정ID로 pwd일치하면 db에서 삭제
+     *
      * @param scheduleId
      * @param userPwd
      */
@@ -33,6 +35,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * db에 일정 저장
+     *
      * @param scheduleRequest
      * @return
      */
@@ -47,6 +50,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 필터링 조건에 의한 검색 서비스
+     *
      * @param userName
      * @param updatedAt
      * @param userId
@@ -54,14 +58,23 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     public List<ScheduleResponseDto> findSchedules(String userName, String updatedAt, String userId) {//검색 조건에 따라 일정리스트 가져오는 메소드
-        if (!userId.trim().isEmpty()) {//userId가 있으면 실행
-            return scheduleRepository.findSchedulesByUserId("%" + userId + "%");
+
+        List<ScheduleResponseDto> queryResultList = new ArrayList<>();
+        //userId가 있으면 실행
+        if (!userId.trim().isEmpty()) {
+            queryResultList = scheduleRepository.findSchedulesByUserId("%" + userId + "%");
+
+        } else {
+            queryResultList = scheduleRepository.findSchedulesByUserName(userName, "%" + updatedAt + "%");
         }
-        return scheduleRepository.findSchedulesByUserName("%" + userName + "%", "%" + updatedAt + "%"); //userId가 없으면 userName or updatedAt로 검색 하는 것이므로 실행
+        //userId가 없으면 userName or updatedAt로 검색 하는 것이므로 실행
+        if (queryResultList.isEmpty()) throw new CustomException("db에 존재하는 데이터를 입력해주세요");
+        return queryResultList;
     }
 
     /**
      * 선택 일정ID로 db조회 서비스
+     *
      * @param scheduleId
      * @return
      */
@@ -72,6 +85,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 업데이트 닉네임 올바른 입력인지 체크
+     *
      * @param scheduleId
      * @param scheduleRequest
      * @return db업데이트 후 결과 리턴
@@ -90,6 +104,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 비밀번호 db에서 일정ID로 조회해서 가져오는 메소드
+     *
      * @param scheduleId
      * @return db에 저장된 비밀번호
      */
@@ -100,6 +115,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 페이징 처리
+     *
      * @param currentNum 현재 페이지
      * @param pageSize   보여줄 페이지 크기
      * @return 해당 크기만큼 쿼리가져와서 반환
@@ -111,6 +127,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 비밀번호 맞는지 검사
+     *
      * @param scheduleId
      * @param userPwd
      */

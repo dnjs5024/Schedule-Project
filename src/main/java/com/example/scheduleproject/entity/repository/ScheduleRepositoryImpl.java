@@ -26,13 +26,21 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    /**
+     * //일정 정보 저장하는 메소드
+     *
+     * @param schedule
+     * @return findSelectScheduleById에서 scheduleId로 조회 후 반환
+     */
     @Override
-    public ScheduleResponseDto saveSchedule(Schedule schedule) {//일정 정보 저장하는 메소드
+    public ScheduleResponseDto saveSchedule(Schedule schedule) {
 
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        Map<String, Object> insertDataMap = new HashMap<>();//데이터 넣어줄 임시 map
+
         simpleJdbcInsert.withTableName("schedule");//테이블 이름
         simpleJdbcInsert.usingGeneratedKeyColumns("schedule_id");//일정 테이블의 일정ID
-        Map<String, Object> insertDataMap = new HashMap<>();//데이터 넣어줄 임시 map
+
         insertDataMap.put("user_id", schedule.getUserId());
         insertDataMap.put("createdAt", getCurrentTime());
         insertDataMap.put("updatedAt", getCurrentTime());
@@ -40,12 +48,20 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
         insertDataMap.put("userPwd", schedule.getUserPwd());
 
         Number key = simpleJdbcInsert.executeAndReturnKey(new MapSqlParameterSource(insertDataMap));//sql 실행
+
         return findSelectScheduleById(key.intValue());// db에 저장된 값 조회에서 보여줌
+
     }
 
-
+    /**
+     * //일정ID로 일정 가져오는 메소드
+     *
+     * @param scheduleId
+     * @return
+     */
     @Override
     public ScheduleResponseDto findSelectScheduleById(int scheduleId) {//일정ID로 일정 가져오는 메소드
+
         return jdbcTemplate.query(
                 "select * from\n" +
                         "(select * from schedule where schedule_id = ?)a\n" +
@@ -59,21 +75,39 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
                         rs.getString("updated_at"),
                         rs.getString("content")
                 ), scheduleId).get(0);
+
     }
 
+    /**
+     * //선택한 일정 삭제하는 메소드
+     *
+     * @param scheduleId
+     */
     @Override
-    public void deleteScheduleById(int scheduleId) {//선택한 일정 삭제하는 메소드
+    public void deleteScheduleById(int scheduleId) {
         jdbcTemplate.update("delete from schedule where schedule_id = ? ", scheduleId);
     }
 
+    /**
+     * 유저 아이디 존재하는지
+     *
+     * @param userId
+     * @return userId 반환
+     */
     @Override
     public List<Integer> isUserIdByUserId(int userId) {
         return jdbcTemplate.query("select user_id from users where user_id =  ? ",
                 (rs, i) -> rs.getInt("user_id"), userId);
     }
 
+    /**
+     * //선택한 유저ID로 유저가 작성한 글 목록 가져옴
+     *
+     * @param userId
+     * @return List<ScheduleResponseDto> 조회결과
+     */
     @Override
-    public List<ScheduleResponseDto> findSchedulesByUserId(String userId) {//선택한 유저ID로 유저가 작성한 글 목록 가져옴
+    public List<ScheduleResponseDto> findSchedulesByUserId(String userId) {
         return jdbcTemplate.query(
                 "select * from " +
                         "(Select * from schedule a  where user_id like ? ) a " +
@@ -82,16 +116,30 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
                 custonRowMapper(), userId);
     }
 
+    /**
+     * 유저닉네임으로 일정검색
+     *
+     * @param userName
+     * @param updatedAt
+     * @return List<ScheduleResponseDto> 조회결과
+     */
     @Override
     public List<ScheduleResponseDto> findSchedulesByUserName(String userName, String updatedAt) {//유저 닉네임과 날짜로 조회에서 리스트 가져오는 메소드
         return jdbcTemplate.query(
                 "select * from " +
                         "(Select * from schedule a  where updated_at like ?) a " +
-                        "join " + "(select user_name,user_id from users where user_name like ?) b " +
+                        "join " + "(select user_name,user_id from users where user_name like if(? = '','%%',?)) b " +
                         "on a.user_id = b.user_id order by updated_at desc;",
-                custonRowMapper(), updatedAt, userName);
+                custonRowMapper(), updatedAt, userName, userName);
     }
 
+    /**
+     * 업데이트 유저 이름
+     *
+     * @param scheduleId
+     * @param schedule
+     * @return findSelectScheduleById에서 조회에서 ScheduleResponseDto반환
+     */
     @Override
     public ScheduleResponseDto updateScheduleByIdForUserName(int scheduleId, Schedule schedule) {//일정ID로  작성자명 수정하는 메소드
         jdbcTemplate.update(
@@ -104,6 +152,13 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
         return findSelectScheduleById(scheduleId);// 수정 결과 db에 조회에서 보여줌
     }
 
+    /**
+     * 업데이트 내용
+     *
+     * @param scheduleId
+     * @param schedule
+     * @return
+     */
     @Override
     public ScheduleResponseDto updateScheduleByIdForContent(int scheduleId, Schedule schedule) {//일정ID로 할 일 내용 수정하는 메소드
         jdbcTemplate.update(
@@ -114,6 +169,7 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
 
     /**
      * 일정ID로 해당 글 비번 가져옴
+     *
      * @param scheduleId
      * @return 비밀번호
      */
@@ -125,6 +181,7 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
 
     /**
      * 페이징 limit로 범위 계산
+     *
      * @param startNum
      * @param endNum
      * @return

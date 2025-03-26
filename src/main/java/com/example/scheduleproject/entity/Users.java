@@ -9,22 +9,21 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Users {
 
-    private int UserId;
+    private int UserId;//유저ID
 
-    private String userName;
+    private String userName;//유저이름
 
-    private String userEmail;
+    private String userEmail;//유저이메일
 
-    private String createdAt;
+    private String createdAt;//유저등록일
 
-    private String updatedAt;
+    private String updatedAt;//유저 정보 수정일
 
-    public Users() {
-
-    }
 
     public Users(String userName, String userEmail) {
+
         this.userName = userName;
         this.userEmail = userEmail;
+
     }
 }
