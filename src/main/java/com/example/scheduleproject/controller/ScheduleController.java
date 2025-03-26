@@ -103,7 +103,7 @@ public class ScheduleController {//schedule table 컨트롤러
      */
     @GetMapping("/v1/schedule/{currentNum}/{pageSize}")
     public List<ScheduleResponseDto> findSchedulesByCurrentPageNum(
-            @PathVariable @Min(1) int currentNum,
+            @PathVariable @Min(0) int currentNum,
             @PathVariable @Min(1) int pageSize) {
         return scheduleService.findSchedulesByCurrentPageNum(currentNum, pageSize);
     }
