@@ -72,7 +72,7 @@ Schedule Project는 유저정보를 등록 & 일정을 입력받아 클라이언
 
 | 기능 이름      | Method | Url                                 | Request                                                                                     | Response | Status           |
 |------------|--------|-------------------------------------|---------------------------------------------------------------------------------------------|----------|------------------|
-| 일정 등록      | POST   | /schedule/v1/schedule               | 요청 body{    "userName" : "wonjun",    "content":"test",    "userPwd": "1234"}               | 등록 정보    | 200: 정상등록 400:오류        |    
+| 일정 등록      | POST   | /schedule/v1/schedule               | 요청 body{ "content":"일정내용", "userPwd": "1234","userId": 1}                                   | 등록 정보    | 200: 정상등록 400:오류        |    
 | 전체 일정 조회   | GET    | /schedule/v1/schedules              | 요청 param    1. ?userId= //  선택 유저 작성 일정     2. userName=&updatedAt=YYYY-MM-DD //이름,수정날짜로 검색 | 다건 응답 정보 | 200: 정상조회  400:오류       |
 | 선택 일정 조회   | GET    | /schedule/v1/schedule/{schedulesId} | 요청 param                                                                                    | 단건 응답 정보 | 200: 정상조회 400:오류        |
 | 선택 페이지 조회  | GET    | /v1/schedule/{currentNum}/{pageSize} | 요청 param                                                                                    | 다건 응답 정보 | 200: 정상조회 400:오류        |

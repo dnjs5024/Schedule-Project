@@ -59,9 +59,10 @@ public class ScheduleController {//schedule table 컨트롤러
      *                        }
      * @return db에서 ScheduleResponseDto에 넣어주고 반환
      */
-    @PostMapping("/v1/schedule{userId}")//일정 저장하는 메소드
+    @PostMapping("/v1/schedule")//일정 저장하는 메소드
     public ScheduleResponseDto saveScheduleController(
-            @RequestBody @Validated(AddValidation.class) ScheduleRequestDto scheduleRequest) {
+            @RequestBody @Validated(AddValidation.class) ScheduleRequestDto scheduleRequest
+    ) {
         return scheduleService.saveSchedule(scheduleRequest);
     }
 

@@ -11,7 +11,9 @@ public class ScheduleRequestDto {
 
     private String userName; //유저명
 
-    private int userId; //유저ID
+    @Min(value = 1, message = "1 이상의 값을 입력해주세요")
+    @NotNull(message = "아이디는 필수 입력 항목 입니다", groups = AddValidation.class)
+    private Integer userId; //유저ID
 
     @Size(max = 200, message = "200글자 이하로 작성해주세요", groups = AddValidation.class)
     @NotBlank(message = "내용은 필수 입력 항목 입니다", groups = AddValidation.class)
